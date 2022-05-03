@@ -36,6 +36,7 @@ func (s *webDBToBQStreaming) Stream(ctx context.Context) error {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"tableName": tableName,
+				"error":     err,
 			}).Errorln("error streaming table into presync dataset in BQ")
 			continue
 		}
@@ -44,6 +45,7 @@ func (s *webDBToBQStreaming) Stream(ctx context.Context) error {
 		if err != nil {
 			log.WithFields(log.Fields{
 				"tableName": tableName,
+				"error":     err,
 			}).Errorln("error merging table from presync dataset to web-sync in BQ")
 		}
 	}

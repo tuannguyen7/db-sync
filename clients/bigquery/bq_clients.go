@@ -6,7 +6,6 @@ import (
 	"context"
 	"db-sync/config"
 	"db-sync/data"
-	"google.golang.org/api/option"
 	"time"
 )
 
@@ -16,8 +15,7 @@ type Client struct {
 
 func NewClient() (*Client, error) {
 	ctx := context.Background()
-	option := option.WithCredentialsFile("db-sync-service-account.json")
-	bqClient, err := bigquery.NewClient(ctx, config.BqProjectId, option)
+	bqClient, err := bigquery.NewClient(ctx, config.BqProjectId)
 	if err != nil {
 		return nil, err
 	}
