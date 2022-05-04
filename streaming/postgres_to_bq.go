@@ -99,7 +99,7 @@ func (s *webDBToBQStreaming) generateMergeQuery(ctx context.Context, tableName s
 			{{.whereClause}}
 			GROUP BY
 			id, _date)) S
-			ON T.id = S.id and T._date = T._date
+			ON T.id = S.id and T._date = S._date
 			WHEN MATCHED THEN
 		UPDATE SET {{.updateClause}}
 			WHEN NOT MATCHED THEN
