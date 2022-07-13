@@ -15,3 +15,9 @@ var BqPresyncDataset = os.Getenv("BQ_PRESYNC_DATASET")
 var StreamingBatchSize = os.Getenv("STREAMING_BATCH_SIZE")
 var StreamingDbTables = os.Getenv("STREAMING_DB_TABLES")
 var Separator = ","
+
+var KiotVietClientID = os.Getenv("KIOTVIET_CLIENT_ID")
+var KiotVietClientSecret = os.Getenv("KIOTVIET_CLIENT_SECRET")
+var KiotVietRetailer = os.Getenv("KIOTVIET_RETAILER")
+var KiotVietUserName = os.Getenv("KIOTVIET_USERNAME")
+var KiotVietPassWord = os.Getenv("KIOTVIET_PASSWORD")

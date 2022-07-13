@@ -55,6 +55,7 @@ func (c *Client) GetTableInfo(ctx context.Context, tableName string) ([]data.Col
 			Name:     columnName,
 			DataType: columnTypes[i].DatabaseTypeName(),
 			NullAble: nullAble,
+			From:     data.ColumnFromBQ,
 		}
 		columns = append(columns, c)
 	}

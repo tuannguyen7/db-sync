@@ -61,6 +61,22 @@ func PostgresDataTypeToGo(dataType string) (driver.Valuer, error) {
 	return nil, fmt.Errorf("cannot map datatype %s from Postgre to BQ type", dataType)
 }
 
+func KiotVietDataTypeToBQ(dataType string) (bigquery.FieldType, error) {
+	found, ok := goDataTypeToBQ[dataType]
+	if ok {
+		return found, nil
+	}
+
+	if strings.HasPrefix(dataType, "int") {
+		return bigquery.IntegerFieldType, nil
+	}
+	if strings.HasPrefix(dataType, "float") {
+		return bigquery.FloatFieldType, nil
+	}
+
+	return bigquery.StringFieldType, fmt.Errorf("cannot map datatype %s from Postgre to BQ type", dataType)
+}
+
 var postgresDataTypeToBQ = map[string]bigquery.FieldType{
 	"TEXT":        bigquery.StringFieldType,
 	"UUID":        bigquery.StringFieldType,
@@ -85,4 +101,12 @@ var postGresDataTypeToNullBool = map[string]interface{}{
 
 var postGresDataTypeToNullTime = map[string]interface{}{
 	"TIMESTAMPTZ": struct{}{},
+}
+
+var goDataTypeToBQ = map[string]bigquery.FieldType{
+	"string": bigquery.StringFieldType,
+	"int64":  bigquery.IntegerFieldType,
+	"bool":   bigquery.BooleanFieldType,
+	"float":  bigquery.FloatFieldType,
+	"time":   bigquery.TimestampFieldType,
 }

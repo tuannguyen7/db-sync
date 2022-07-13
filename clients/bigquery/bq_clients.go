@@ -6,6 +6,7 @@ import (
 	"context"
 	"db-sync/config"
 	"db-sync/data"
+	"fmt"
 	"time"
 )
 
@@ -78,16 +79,15 @@ func (c *Client) InsertOrUpdate(ctx context.Context, dataset string, tableName s
 
 	for _, r := range rows.Rows {
 		vss = append(vss, &bigquery.ValuesSaver{
-			Schema:   schema,
-			InsertID: bigquery.NoDedupeID,
-			Row:      c.convertToValue(r.Values, schema),
+			Schema: schema,
+			Row:    c.convertToValue(r.Values, schema),
 		})
 	}
-	for _, vs := range vss {
-		if err := inserter.Put(ctx, vs); err != nil {
-			return err
-		}
+
+	if err := inserter.Put(ctx, vss); err != nil {
+		return err
 	}
+
 	return nil
 }
 
@@ -108,7 +108,15 @@ func (c *Client) convertToValue(row map[string]interface{}, schema bigquery.Sche
 func (c *Client) convertColumnToSchema(columns []data.Column) (bigquery.Schema, error) {
 	var schema bigquery.Schema
 	for _, c := range columns {
-		bqType, err := data.PostgresDataTypeToBQ(c.DataType)
+		var bqType bigquery.FieldType
+		var err error
+		if c.From == data.ColumnFromBQ {
+			bqType, err = data.PostgresDataTypeToBQ(c.DataType)
+		} else if c.From == data.ColumnFromKiotViet {
+			bqType, err = data.KiotVietDataTypeToBQ(c.DataType)
+		} else {
+			err = fmt.Errorf("ColumnFrom %s not supported yet", c.From)
+		}
 		if err != nil {
 			return nil, err
 		}
